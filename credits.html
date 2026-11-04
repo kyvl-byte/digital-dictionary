@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meet the Team | Digital Dictionary</title>
+  <meta name="description" content="The student team behind the Digital Dictionary: Balochi, Pashto and Punjabi words collected from native speakers.">
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#E9631A">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* palette: Oatmeal Latte #EBEBDF + Atomic Orange #E9631A
+         (variable names kept from the old purple palette so nothing else had to change) */
+      --babys-breath: #EBEBDF;     /* Oatmeal Latte - page background / light text */
+      --purple-velvet: #E9631A;    /* Atomic Orange - header */
+      --shot-in-the-dark: #2A1A10; /* dark warm brown - body text */
+      --spinel-violet: #A63F0B;    /* deep orange - headings, footer */
+      --blackcurrant: #C9530F;     /* Balochi card */
+      --fujinezumi: #E9631A;       /* Punjabi card (Atomic Orange) */
+      --mauve-musk: #F6C9A8;       /* soft orange tint */
+
+      --font-heading: "Bebas Neue", "Arial Narrow", Impact, sans-serif;
+      --font-body: "Poppins", Arial, Helvetica, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--babys-breath);
+      color: var(--shot-in-the-dark);
+      font-family: var(--font-body);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      cursor: url("images/cursor.svg"), auto;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--font-heading);
+      font-variant: small-caps;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+    }
+
+    header {
+      background-color: var(--purple-velvet);
+      padding: 30px 20px 40px;
+    }
+    a.back-link {
+      color: var(--babys-breath);
+      font-size: 14px;
+      display: inline-block;
+      margin-bottom: 14px;
+      text-decoration: none;
+    }
+    header h1 {
+      color: var(--babys-breath);
+      margin: 0;
+      font-size: 64px;
+      line-height: 1.05;
+    }
+    .tagline {
+      font-family: var(--font-heading);
+      font-variant: small-caps;
+      letter-spacing: 0.04em;
+      color: var(--babys-breath);
+      font-size: 26px;
+      margin: 12px 0 0;
+    }
+
+    section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 10px;
+    }
+    section h2 {
+      color: var(--spinel-violet);
+      font-size: 44px;
+      line-height: 1.1;
+      margin: 0 0 14px;
+    }
+    section p {
+      font-size: 16px;
+      line-height: 1.7;
+      margin: 0 auto 14px;
+      max-width: 640px;
+    }
+
+    .team-grid {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .member-card {
+      background-color: white;
+      border-radius: 16px;
+      border-top: 8px solid var(--purple-velvet);
+      padding: 26px 22px;
+      width: 270px;
+      box-shadow: 2px 4px 10px rgba(42,26,16,0.12);
+      text-align: center;
+    }
+    .member-card.balochi { border-top-color: var(--blackcurrant); }
+    .member-card.pashto  { border-top-color: var(--spinel-violet); }
+    .member-card.punjabi { border-top-color: var(--fujinezumi); }
+
+    .member-card h3 {
+      color: var(--spinel-violet);
+      font-size: 34px;
+      margin: 0 0 6px;
+    }
+    .member-names {
+      font-size: 17px;
+      font-weight: bold;
+      margin: 0 0 10px;
+    }
+    .member-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+      max-width: none;
+    }
+
+    .facilitator {
+      display: inline-block;
+      background-color: var(--mauve-musk);
+      border-radius: 20px;
+      padding: 26px 34px;
+      margin-top: 10px;
+      box-shadow: 2px 2px 6px rgba(42,26,16,0.2);
+    }
+    .facilitator h3 {
+      color: var(--shot-in-the-dark);
+      font-size: 40px;
+      margin: 0;
+      line-height: 1.1;
+    }
+    .facilitator p {
+      margin: 6px 0 0;
+      font-size: 15px;
+    }
+
+    footer {
+      background-color: var(--spinel-violet);
+      color: var(--babys-breath);
+      margin-top: 50px;
+      padding: 30px 20px;
+      font-family: var(--font-heading);
+      font-variant: small-caps;
+      letter-spacing: 0.04em;
+      font-size: 24px;
+    }
+    footer .department {
+      display: block;
+      font-family: var(--font-body);
+      font-variant: normal;
+      letter-spacing: 0;
+      font-size: 14px;
+      margin-top: 8px;
+      color: var(--mauve-musk);
+    }
+    footer a {
+      color: var(--mauve-musk);
+      font-family: var(--font-body);
+      font-variant: normal;
+      font-size: 14px;
+      letter-spacing: 0;
+      display: block;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 44px; }
+      .tagline { font-size: 20px; }
+      section h2 { font-size: 36px; }
+      .facilitator { padding: 22px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="back-link">← Back to Home</a>
+    <h1>Meet the Team</h1>
+    <p class="tagline">The people behind the Digital Dictionary</p>
+  </header>
+
+  <section>
+    <h2>About the project</h2>
+    <p>The Digital Dictionary is a student project of the Institute of English Language and Literature, University of Sindh. It brings together everyday words in Balochi, Pashto and Punjabi, collected along with their pronunciations from native speakers.</p>
+  </section>
+
+  <section>
+    <h2>Facilitator</h2>
+    <div class="facilitator">
+      <h3>Kanwal Gorar</h3>
+      <p>Facilitator and website developer</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Language teams</h2>
+    <div class="team-grid">
+
+      <div class="member-card balochi">
+        <h3>Balochi</h3>
+        <p class="member-names">Sidra Solangi<br>Nayab Shoro</p>
+        <p>Collected Balochi words and their pronunciations from native speakers.</p>
+      </div>
+
+      <div class="member-card pashto">
+        <h3>Pashto</h3>
+        <p class="member-names">Shumaila Khaskheli<br>Almas Panhwar</p>
+        <p>Collected Pashto words and their pronunciations from native speakers.</p>
+      </div>
+
+      <div class="member-card punjabi">
+        <h3>Punjabi</h3>
+        <p class="member-names">Hifza Dehraj<br>Sanobar Burfat</p>
+        <p>Collected Punjabi words and their pronunciations from native speakers.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    Digital Dictionary • Balochi • Pashto • Punjabi
+    <span class="department">Institute of English Language and Literature, University of Sindh</span>
+    <a href="index.html">Back to the dictionary</a>
+  </footer>
+
+</body>
+</html>

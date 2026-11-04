@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>English to Punjabi Dictionary</title>
+  <meta name="description" content="A student-built English to Punjabi dictionary with real translations collected from native speakers.">
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=2">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#E9631A">
+
+  <!-- Fonts: downloaded by every visitor's browser, so they look the same on all devices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* palette: Oatmeal Latte #EBEBDF + Atomic Orange #E9631A
+         (variable names kept from the old purple palette so nothing else had to change) */
+      --babys-breath: #EBEBDF;     /* Oatmeal Latte - page background / light text */
+      --purple-velvet: #E9631A;    /* Atomic Orange - buttons, borders */
+      --shot-in-the-dark: #2A1A10; /* dark warm brown - body text */
+      --spinel-violet: #A63F0B;    /* deep orange - headings, hover (readable on cream) */
+      --blackcurrant: #C9530F;
+      --fujinezumi: #E9631A;       /* Punjabi banner (Atomic Orange) */
+      --mauve-musk: #F6C9A8;       /* soft orange tint - cards */
+
+      /* roles */
+      --bg: var(--babys-breath);
+      --text: var(--shot-in-the-dark);
+      --heading: var(--spinel-violet);
+      --soft-card: var(--mauve-musk);
+      --page-banner: var(--fujinezumi);   /* Punjabi page colour */
+
+      /* fonts */
+      --font-heading: "Bebas Neue", "Arial Narrow", Impact, sans-serif;
+      --font-body: "Poppins", Arial, Helvetica, sans-serif;
+      --font-urdu: "Noto Naskh Arabic", "Segoe UI", Tahoma, serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      text-align: center;
+      cursor: url("images/cursor.svg") 16 16, auto;
+      -webkit-text-size-adjust: 100%;
+    }
+    h1, h3, h4 {
+      font-family: var(--font-heading);
+      font-variant: small-caps;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+    }
+    header {
+      background-color: var(--page-banner);
+      padding: 25px 20px;
+    }
+    header h1 {
+      color: var(--babys-breath);
+      margin: 0;
+      font-size: 54px;
+      line-height: 1.05;
+    }
+    a.back-link {
+      color: var(--babys-breath);
+      font-size: 14px;
+      display: inline-block;
+      margin-bottom: 10px;
+      text-decoration: none;
+    }
+    .search-area {
+      padding: 40px 20px;
+      position: relative;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .search-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+    input {
+      padding: 12px;
+      font-size: 18px;
+      width: 260px;
+      border: 2px solid var(--purple-velvet);
+      border-radius: 8px;
+      font-family: var(--font-body);
+    }
+    #micButton {
+      padding: 10px 14px;
+      font-size: 18px;
+      background-color: var(--purple-velvet);
+      color: var(--babys-breath);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #micButton:hover {
+      background-color: var(--spinel-violet);
+    }
+    #suggestions {
+      list-style: none;
+      margin: 4px 0 0;
+      padding: 0;
+      text-align: left;
+      background: white;
+      border: 1px solid var(--mauve-musk);
+      border-radius: 6px;
+      max-width: 260px;
+      margin-left: auto;
+      margin-right: auto;
+      display: none;
+    }
+    #suggestions li {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    #suggestions li:hover {
+      background-color: var(--soft-card);
+    }
+    #results {
+      margin-top: 20px;
+    }
+    .word-card {
+      background-color: var(--soft-card);
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 400px;
+      margin: 15px auto;
+      text-align: left;
+      box-shadow: 2px 2px 6px rgba(42,26,16,0.2);
+      position: relative;
+    }
+    .word-card h3 {
+      color: var(--heading);
+      font-size: 34px;
+      line-height: 1.1;
+      margin: 0 0 8px;
+      display: inline-block;
+    }
+    .word-emoji {
+      font-size: 24px;
+      margin-right: 8px;
+    }
+    .native-script {
+      direction: rtl;
+      font-size: 26px;
+      color: var(--spinel-violet);
+      font-family: var(--font-urdu);
+      margin: 6px 0;
+    }
+    .suggestion-note {
+      font-size: 13px;
+      color: var(--shot-in-the-dark);
+      margin-top: 4px;
+    }
+    .star-button {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-size: 22px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--babys-breath);
+    }
+    .star-button.active {
+      color: var(--spinel-violet);
+    }
+    .side-panel {
+      max-width: 400px;
+      margin: 30px auto 0;
+      text-align: left;
+    }
+    .side-panel h4 {
+      color: var(--heading);
+      margin: 0 0 6px;
+      font-size: 28px;
+    }
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip {
+      background-color: white;
+      border: 1px solid var(--purple-velvet);
+      color: var(--spinel-violet);
+      border-radius: 16px;
+      padding: 4px 12px;
+      font-size: 13px;
+      font-family: var(--font-body);
+      cursor: pointer;
+    }
+    .chip:hover {
+      background-color: var(--purple-velvet);
+      color: var(--babys-breath);
+    }
+
+    /* Voices: Listen button on word cards */
+    .listen-button {
+      font-family: var(--font-body);
+      background-color: var(--purple-velvet);
+      color: var(--babys-breath);
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    .listen-button:hover {
+      background-color: var(--spinel-violet);
+    }
+    .listen-button:focus-visible {
+      outline: 3px solid var(--shot-in-the-dark);
+      outline-offset: 2px;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 38px;
+      }
+      .search-area {
+        max-width: 95%;
+        padding: 30px 10px;
+      }
+      .search-row {
+        flex-direction: column;
+        align-items: center;
+      }
+      input {
+        width: 85%;
+      }
+      #micButton {
+        margin-top: 8px;
+      }
+      .word-card, .side-panel {
+        max-width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-link">← Back to Home</a>
+    &nbsp;&nbsp;•&nbsp;&nbsp;
+    <a href="compare.html" class="back-link">⇄ Compare Languages</a>
+    <h1>English → Punjabi Dictionary</h1>
+  </header>
+  <div class="search-area">
+    <div class="search-row">
+      <input type="text" id="searchBox" placeholder="Type an English word..." autocomplete="off">
+      <button id="micButton" title="Search by voice" aria-label="Search by voice">🎤</button>
+    </div>
+    <ul id="suggestions"></ul>
+    <div id="results"></div>
+
+    <div class="side-panel">
+      <h4>Recent searches</h4>
+      <div id="historyList" class="chip-list"></div>
+    </div>
+
+    <div class="side-panel">
+      <h4>Bookmarked words</h4>
+      <div id="bookmarkList" class="chip-list"></div>
+    </div>
+  </div>
+
+  <!-- The Punjabi word list now lives in its own file: data/punjabi.js -->
+  <script src="data/punjabi.js" charset="utf-8"></script>
+
+  <script>
+    const dictionary = window.DICT_PUNJABI;
+
+    // Makes text safe to put inside HTML
+    function escapeHTML(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    const searchBox = document.getElementById("searchBox");
+    const resultsDiv = document.getElementById("results");
+    const suggestionsList = document.getElementById("suggestions");
+    const micButton = document.getElementById("micButton");
+    const historyList = document.getElementById("historyList");
+    const bookmarkList = document.getElementById("bookmarkList");
+
+    let memoryHistory = [];
+    let memoryBookmarks = [];
+
+    function loadList(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return fallback;
+      }
+    }
+    function saveList(key, arr, fallbackRef) {
+      try {
+        localStorage.setItem(key, JSON.stringify(arr));
+      } catch (e) {
+        fallbackRef.length = 0;
+        fallbackRef.push(...arr);
+      }
+    }
+
+    // (named recentSearches so it never clashes with the browser's built-in "history")
+    let recentSearches = loadList("punjabi_history", memoryHistory);
+    let bookmarks = loadList("punjabi_bookmarks", memoryBookmarks);
+
+    // ============================================================
+    // VOICES
+    // Recordings live in: audios/punjabi/
+    // Normal words: apple.mp3, arm.mp3, ...
+    // Job words have .punjabi at the end: poet.punjabi.mp3
+    // To add a voice: put the file in audios/punjabi/ and add the word to VOICE_WORDS.
+    // ============================================================
+    const VOICE_FOLDER = "audios/punjabi/";
+
+    // Normal voices: the file is named after the word (word.mp3)
+    const VOICE_WORDS = [
+      "almond", "apple", "arm", "back", "bag", "balloon", "banana", "basket", "bathroom", "bed",
+      "bedroom", "bench", "biscuit", "blanket", "blood", "bone", "bottle", "bowl", "box", "brain",
+      "bread", "bride", "brother", "brother-in-law", "brush", "bucket", "butter", "cake", "candle",
+      "carpet", "carrot", "ceiling", "chair", "cheese", "chest", "chicken", "child", "chili", "chin",
+      "coffee", "comb", "compass", "coriander", "corn", "cousin", "cucumber", "cumin", "cup",
+      "cupboard", "curry", "curtain", "date", "daughter", "doll", "door", "ear", "egg", "elbow",
+      "elder", "family", "fan", "father", "father-in-law", "fence", "finger", "fish", "flag", "floor",
+      "fork", "friend", "fruit", "garden", "garlic", "ginger", "glasses", "grandmother", "grapes",
+      "groom", "guardian", "guest", "hair", "hand", "head", "heart", "honey", "house", "husband",
+      "jar", "juice", "key", "knife", "ladder", "lamp", "lemon", "lentils", "lip", "lock", "mango",
+      "map", "mask", "matchbox", "meat", "melon", "microscope", "milk", "mirror", "mother",
+      "mother-in-law", "mouth", "neck", "neighbor", "nephew", "nose", "nut", "oil", "onion",
+      "orange", "orphan", "pan", "parent", "peach", "pear", "pepper", "pillow", "pistachio", "plate",
+      "pomegranate", "potato", "pumpkin", "puzzle", "refrigerator", "rice", "room", "rope", "rug",
+      "salt", "shelf", "shoulder", "sink", "sister", "sister-in-law", "skin", "soap", "sofa", "son",
+      "soup", "spinach", "spoon", "stairs", "stepfather", "stepmother", "stomach", "stool", "stove",
+      "sugar", "sugarcane", "suitcase", "sweet", "table", "tap", "tea", "teeth", "telescope", "toe",
+      "tomato", "tongue", "towel", "toy", "turmeric", "twin", "umbrella", "uncle", "vegetable",
+      "wall", "walnut", "watch", "water", "wheat", "widow", "widower", "wife", "window", "wrist",
+      "yogurt",
+      // new voices
+      "ankle", "broom", "clock", "eye", "feet", "grandfather", "kitchen",
+      "knee", "niece", "pot", "relative", "sibling",
+      // newest voices
+      "aunt", "baby", "leg", "roof"
+    ];
+
+    // Job voices: the file is named word.punjabi.mp3 (poet.punjabi.mp3, doctor.punjabi.mp3, ...)
+    const JOB_VOICE_WORDS = [
+      "teacher", "doctor", "nurse", "farmer", "engineer", "lawyer", "police", "soldier", "driver",
+      "cook", "baker", "tailor", "carpenter", "blacksmith", "fisherman", "shepherd", "merchant",
+      "trader", "artist", "musician", "singer", "writer", "poet", "painter", "barber", "butcher",
+      "potter", "weaver", "guard", "servant"
+    ];
+
+    // The page tries these formats in order until one loads
+    const VOICE_EXTS = [".m4a", ".mp3", ".aac"];
+
+    // Words whose file name is different from the usual pattern.
+    // If a word shows "Can't load: ...", compare that name with the real file name
+    // in your folder and fix the line below.
+    const VOICE_FILE_NAMES = {
+      soap: "saop",
+      aunt: "aunty",
+      "brother-in-law": "brother_in_law",
+      "father-in-law": "father_in_law",
+      "mother-in-law": "mother_in_law",
+      "sister-in-law": "sister_in_law",
+      grandmother: "grand_mother_",
+      grandfather: "grand_father",
+      groom: "groom_",
+      stepfather: "step_father",
+      stepmother: "step_mother",
+      twin: "twins",
+      parent: "parents",
+      neighbor: "neighbour",
+      teacher: "Teacher.punjabi",    // capital T
+      cook: "cook.punjabi.mp3"       // this file is a .m4a with .mp3 in its name
+    };
+
+    function voiceFileFor(word) {
+      const isNormal = VOICE_WORDS.includes(word);
+      const isJob = JOB_VOICE_WORDS.includes(word);
+      if (!isNormal && !isJob) return null;
+
+      let name = VOICE_FILE_NAMES[word];
+      if (!name) {
+        name = word.replace(/\?/g, "").replace(/ /g, "_");
+        if (isJob) name += ".punjabi";
+      }
+      return VOICE_FOLDER + encodeURIComponent(name);   // no extension here
+    }
+
+    let voicePlayer = null;
+    function playVoice(basePath, button) {
+      if (voicePlayer) voicePlayer.pause();
+      let i = 0;
+
+      function reset() { button.textContent = "🔊 Listen"; }
+
+      function tryNext() {
+        if (i >= VOICE_EXTS.length) {
+          button.textContent = "⚠️ Can't load: " + decodeURIComponent(basePath);
+          setTimeout(reset, 4000);
+          return;
+        }
+        const player = new Audio(basePath + VOICE_EXTS[i++]);
+        voicePlayer = player;
+        button.textContent = "🔊 Playing...";
+        player.addEventListener("ended", reset);
+        player.addEventListener("error", tryNext);
+        player.play().catch(function (err) {
+          if (err.name === "NotAllowedError") reset();
+        });
+      }
+
+      tryNext();
+    }
+
+    // ============================================================
+    // RECENT SEARCHES + BOOKMARKS
+    // ============================================================
+    function renderChips(container, words, onClick) {
+      container.innerHTML = "";
+      if (words.length === 0) {
+        container.innerHTML = `<span style="color:#A63F0B; font-size:13px;">None yet</span>`;
+        return;
+      }
+      words.forEach(w => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "chip";
+        chip.textContent = w;
+        chip.addEventListener("click", function() {
+          searchBox.value = w;
+          onClick(w);
+        });
+        container.appendChild(chip);
+      });
+    }
+
+    function refreshPanels() {
+      renderChips(historyList, recentSearches, function(w) {
+        searchBox.dispatchEvent(new Event("input"));
+      });
+      renderChips(bookmarkList, bookmarks, function(w) {
+        searchBox.dispatchEvent(new Event("input"));
+      });
+    }
+
+    function addToHistory(word) {
+      recentSearches = recentSearches.filter(w => w !== word);
+      recentSearches.unshift(word);
+      recentSearches = recentSearches.slice(0, 5);
+      saveList("punjabi_history", recentSearches, memoryHistory);
+      refreshPanels();
+    }
+
+    function toggleBookmark(word) {
+      if (bookmarks.includes(word)) {
+        bookmarks = bookmarks.filter(w => w !== word);
+      } else {
+        bookmarks.unshift(word);
+      }
+      saveList("punjabi_bookmarks", bookmarks, memoryBookmarks);
+      refreshPanels();
+    }
+
+    function editDistance(a, b) {
+      const dp = Array(a.length + 1).fill(null).map(() => Array(b.length + 1).fill(0));
+      for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+      for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+      for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+          if (a[i - 1] === b[j - 1]) {
+            dp[i][j] = dp[i - 1][j - 1];
+          } else {
+            dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+          }
+        }
+      }
+      return dp[a.length][b.length];
+    }
+
+    function showResult(entry, note) {
+      const isBookmarked = bookmarks.includes(entry.word);
+      const voiceFile = voiceFileFor(entry.word);
+      resultsDiv.innerHTML = `
+        <div class="word-card">
+          <button class="star-button ${isBookmarked ? 'active' : ''}" id="starBtn" aria-label="Bookmark this word">★</button>
+          <h3><span class="word-emoji">${entry.emoji || ""}</span>${entry.word}</h3>
+          <p class="native-script">${entry.script}</p>
+          <p>Pronunciation: ${entry.meaning}</p>
+          ${voiceFile ? `<button type="button" class="listen-button" id="listenBtn">🔊 Listen</button>` : ""}
+          ${note ? `<p class="suggestion-note">${note}</p>` : ""}
+        </div>
+      `;
+      document.getElementById("starBtn").addEventListener("click", function() {
+        toggleBookmark(entry.word);
+        showResult(entry, note);
+      });
+      if (voiceFile) {
+        document.getElementById("listenBtn").addEventListener("click", function() {
+          playVoice(voiceFile, this);
+        });
+      }
+    }
+
+    function updateSuggestions(query) {
+      suggestionsList.innerHTML = "";
+      if (query === "") {
+        suggestionsList.style.display = "none";
+        return;
+      }
+      const matches = dictionary.filter(entry => entry.word.startsWith(query));
+      if (matches.length === 0) {
+        suggestionsList.style.display = "none";
+        return;
+      }
+      matches.slice(0, 5).forEach(entry => {
+        const li = document.createElement("li");
+        li.textContent = `${entry.emoji || ""} ${entry.word}`;
+        li.addEventListener("click", function() {
+          searchBox.value = entry.word;
+          suggestionsList.style.display = "none";
+          addToHistory(entry.word);
+          showResult(entry);
+        });
+        suggestionsList.appendChild(li);
+      });
+      suggestionsList.style.display = "block";
+    }
+
+    searchBox.addEventListener("input", function() {
+      const query = searchBox.value.toLowerCase().trim();
+      resultsDiv.innerHTML = "";
+
+      updateSuggestions(query);
+
+      if (query === "") {
+        return;
+      }
+
+      const exactMatch = dictionary.find(entry => entry.word === query);
+
+      if (exactMatch) {
+        showResult(exactMatch);
+        return;
+      }
+
+      let closest = null;
+      let closestDistance = 3;
+      dictionary.forEach(entry => {
+        const dist = editDistance(query, entry.word);
+        if (dist < closestDistance) {
+          closestDistance = dist;
+          closest = entry;
+        }
+      });
+
+      if (closest && closestDistance === 1 && query.length >= 4) {
+        showResult(closest, `Auto-corrected from "${escapeHTML(query)}"`);
+      } else if (closest) {
+        resultsDiv.innerHTML = `<p class="suggestion-note">No exact match. Did you mean "<strong>${escapeHTML(closest.word)}</strong>"?</p>`;
+      } else {
+        resultsDiv.innerHTML = `<p>No match found.</p>`;
+      }
+    });
+
+    // Save to "Recent searches" only when the person finishes typing (Enter or leaving the box)
+    searchBox.addEventListener("change", function() {
+      const q = searchBox.value.toLowerCase().trim();
+      const hit = dictionary.find(e => e.word === q);
+      if (hit) addToHistory(hit.word);
+    });
+
+    if ('webkitSpeechRecognition' in window) {
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+
+      micButton.addEventListener("click", function() {
+        try { recognition.start(); } catch (e) { /* already listening */ }
+      });
+
+      recognition.onresult = function(event) {
+        const spokenWord = event.results[0][0].transcript;
+        searchBox.value = spokenWord;
+        searchBox.dispatchEvent(new Event("input"));
+      };
+
+      recognition.onerror = function(event) {
+        resultsDiv.innerHTML = `<p>Voice input error. Try typing instead, or check your internet connection.</p>`;
+      };
+    } else {
+      micButton.addEventListener("click", function() {
+        resultsDiv.innerHTML = `<p>Voice input isn't supported in this browser.</p>`;
+      });
+    }
+
+    // Show saved recent searches and bookmarks as soon as the page opens
+    refreshPanels();
+  </script>
+
+  <!-- PUNJABI QUIZ START -->
+  <style>
+    .quiz-wrap {
+      max-width: 420px;
+      margin: 0 auto 50px;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    .quiz-start, .quiz-next {
+      font-family: var(--font-heading);
+      background: var(--purple-velvet);
+      color: var(--babys-breath);
+      border: none;
+      border-radius: 25px;
+      padding: 10px 28px;
+      font-size: 26px;
+      cursor: pointer;
+    }
+
+    .quiz-start:hover, .quiz-next:hover {
+      background: var(--spinel-violet);
+    }
+
+    .quiz-box {
+      background: white;
+      border-top: 7px solid var(--purple-velvet);
+      border-radius: 15px;
+      padding: 24px 20px;
+      margin-top: 20px;
+      box-shadow: 0 4px 12px rgba(42, 26, 16, 0.15);
+    }
+
+    .quiz-box h3 {
+      font-size: 34px;
+      margin: 0 0 12px;
+      color: var(--spinel-violet);
+    }
+
+    .quiz-script {
+      font-family: var(--font-urdu);
+      direction: rtl;
+      font-size: 38px;
+      color: var(--spinel-violet);
+      margin: 16px 0 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .quiz-pron {
+      font-size: 16px;
+      margin: 0 0 20px;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quiz-option {
+      font-family: var(--font-body);
+      background: white;
+      color: var(--shot-in-the-dark);
+      border: 2px solid var(--purple-velvet);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .quiz-option:hover:not(:disabled) {
+      background: var(--babys-breath);
+    }
+
+    .quiz-option:disabled {
+      cursor: default;
+      opacity: 1;
+    }
+
+    .quiz-option.correct {
+      background: var(--spinel-violet);
+      border-color: var(--spinel-violet);
+      color: white;
+    }
+
+    .quiz-option.wrong {
+      background: #f8dddd;
+      border-color: #a33b3b;
+      color: #682525;
+      text-decoration: line-through;
+    }
+
+    .quiz-feedback {
+      min-height: 24px;
+      margin: 16px 0;
+    }
+
+    .quiz-final-score {
+      font-family: var(--font-heading);
+      font-size: 52px;
+      color: var(--spinel-violet);
+      margin: 16px 0;
+    }
+  </style>
+
+  <script>
+  (function () {
+    if (document.getElementById("languageQuiz")) return;
+
+    function make(tag, text, className) {
+      const node = document.createElement(tag);
+      node.textContent = text;
+      if (className) node.className = className;
+      if (tag === "button") node.type = "button";
+      return node;
+    }
+
+    function shuffle(items) {
+      const copy = items.slice();
+
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+
+      return copy;
+    }
+
+    const wrap = make("div", "", "quiz-wrap");
+    wrap.id = "languageQuiz";
+
+    const startButton = make("button", "🎯 Quiz me", "quiz-start");
+    const box = make("div", "", "quiz-box");
+    box.hidden = true;
+
+    wrap.append(startButton, box);
+    document.querySelector(".search-area")
+      .insertAdjacentElement("afterend", wrap);
+
+    let questions = [];
+    let questionIndex = 0;
+    let score = 0;
+
+    function startQuiz() {
+      const seen = new Set();
+
+      questions = shuffle(dictionary).filter(function (entry) {
+        const script = entry.script.trim();
+        if (seen.has(script)) return false;
+        seen.add(script);
+        return true;
+      }).slice(0, 10);
+
+      questionIndex = 0;
+      score = 0;
+      box.hidden = false;
+      showQuestion();
+      box.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function getChoices(question) {
+      const usedWords = new Set([question.word]);
+      const choices = [question];
+
+      shuffle(dictionary).forEach(function (entry) {
+        if (
+          choices.length < 4 &&
+          entry.script.trim() !== question.script.trim() &&
+          !usedWords.has(entry.word)
+        ) {
+          usedWords.add(entry.word);
+          choices.push(entry);
+        }
+      });
+
+      return shuffle(choices);
+    }
+
+    function showQuestion() {
+      box.textContent = "";
+
+      const question = questions[questionIndex];
+      let answered = false;
+
+      const counter = make(
+        "p",
+        "Question " + (questionIndex + 1) +
+        " of " + questions.length + " • Score: " + score
+      );
+
+      box.append(
+        make("h3", "Punjabi Quiz"),
+        counter,
+        make("p", question.script, "quiz-script"),
+        make("p", "Pronounced: " + question.meaning, "quiz-pron"),
+        make("p", "What does this word mean in English?")
+      );
+
+      const options = make("div", "", "quiz-options");
+      const feedback = make("p", "", "quiz-feedback");
+      feedback.setAttribute("aria-live", "polite");
+
+      const next = make(
+        "button",
+        questionIndex === questions.length - 1
+          ? "See my score"
+          : "Next →",
+        "quiz-next"
+      );
+      next.hidden = true;
+
+      getChoices(question).forEach(function (choice) {
+        const button = make("button", choice.word, "quiz-option");
+        button.dataset.word = choice.word;
+
+        button.addEventListener("click", function () {
+          if (answered) return;
+          answered = true;
+
+          options.querySelectorAll("button").forEach(function (item) {
+            item.disabled = true;
+
+            if (item.dataset.word === question.word) {
+              item.classList.add("correct");
+            }
+          });
+
+          if (choice.word === question.word) {
+            score++;
+            feedback.textContent = "✓ Correct!";
+          } else {
+            button.classList.add("wrong");
+            feedback.textContent =
+              '✗ Not quite. The answer is "' + question.word + '".';
+          }
+
+          counter.textContent =
+            "Question " + (questionIndex + 1) +
+            " of " + questions.length + " • Score: " + score;
+
+          next.hidden = false;
+        });
+
+        options.appendChild(button);
+      });
+
+      next.addEventListener("click", function () {
+        questionIndex++;
+
+        if (questionIndex < questions.length) {
+          showQuestion();
+        } else {
+          showScore();
+        }
+      });
+
+      box.append(options, feedback, next);
+    }
+
+    function showScore() {
+      box.textContent = "";
+
+      const message = score >= 8
+        ? "Excellent!"
+        : score >= 5
+          ? "Well done—keep practising!"
+          : "Good try! Explore some words and play again.";
+
+      const again = make("button", "Play again", "quiz-next");
+      again.addEventListener("click", startQuiz);
+
+      box.append(
+        make("h3", "Your score"),
+        make(
+          "p",
+          score + " / " + questions.length,
+          "quiz-final-score"
+        ),
+        make("p", message),
+        again
+      );
+    }
+
+    startButton.addEventListener("click", startQuiz);
+  })();
+  </script>
+  <!-- PUNJABI QUIZ END -->
+
+  <!-- ===== FEEDBACK BUTTON + POP-UP START ===== -->
+  <style>
+    .fb-fab {
+      position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+      background: #E9631A; color: #EBEBDF; border: none; cursor: pointer;
+      padding: 12px 20px; border-radius: 50px;
+      font-family: var(--font-heading);
+      font-size: 22px; letter-spacing: 0.03em;
+      box-shadow: 0 4px 14px rgba(42,26,16,.3);
+      transition: transform .2s, background .2s;
+    }
+    .fb-fab:hover { background: #A63F0B; transform: translateY(-3px); }
+    .fb-overlay {
+      display: none; position: fixed; inset: 0; z-index: 10000;
+      background: rgba(42,26,16,.6); align-items: center;
+      justify-content: center; padding: 16px;
+    }
+    .fb-overlay.open { display: flex; }
+    .fb-box {
+      background: #EBEBDF; width: 100%; max-width: 440px; max-height: 90vh;
+      overflow-y: auto; border-radius: 16px; padding: 24px;
+      color: #2A1A10; position: relative; text-align: left;
+      border-top: 8px solid #E9631A;
+    }
+    .fb-box h3 {
+      margin: 0; color: #A63F0B; font-size: 34px;
+      font-family: var(--font-heading);
+      font-variant: small-caps; font-weight: 400;
+    }
+    .fb-close {
+      position: absolute; top: 10px; right: 14px; background: none;
+      border: none; font-size: 28px; cursor: pointer; color: #A63F0B;
+    }
+    .fb-tabs { display: flex; gap: 8px; margin: 12px 0 10px; }
+    .fb-tab {
+      flex: 1; padding: 10px; border: 2px solid #E9631A; background: #fff;
+      color: #A63F0B; font-weight: bold; border-radius: 8px; cursor: pointer;
+      font-family: var(--font-body); font-size: 14px;
+    }
+    .fb-tab.active { background: #E9631A; color: #EBEBDF; }
+    .fb-form { display: none; }
+    .fb-form.show { display: block; }
+    .fb-form label {
+      display: block; margin: 12px 0 5px; font-weight: bold;
+      font-size: 14px; font-family: var(--font-body);
+    }
+    .fb-form input, .fb-form select, .fb-form textarea {
+      width: 100%; padding: 9px; font-size: 15px; font-family: var(--font-body);
+      border: 1px solid #F6C9A8; border-radius: 8px; background: #fff;
+      box-sizing: border-box;
+    }
+    .fb-form input:focus, .fb-form select:focus, .fb-form textarea:focus {
+      outline: 2px solid #E9631A;
+    }
+    .fb-form textarea { min-height: 90px; resize: vertical; }
+    .fb-send {
+      margin-top: 16px; width: 100%; padding: 11px; background: #E9631A;
+      color: #EBEBDF; border: none; border-radius: 25px; cursor: pointer;
+      font-family: var(--font-heading);
+      font-size: 24px;
+    }
+    .fb-send:hover { background: #A63F0B; }
+    .fb-msg {
+      margin-top: 12px; padding: 10px; border-radius: 8px; display: none;
+      font-size: 14px; font-family: var(--font-body);
+    }
+    .fb-msg.ok { display: block; background: #e4f6e8; color: #1d6b32; }
+    .fb-msg.err { display: block; background: #fde8e8; color: #9b1c1c; }
+    .fb-hp { position: absolute; left: -9999px; }
+    @media (max-width: 500px) {
+      .fb-fab span { display: none; }
+      .fb-fab { padding: 14px; font-size: 20px; }
+    }
+  </style>
+
+  <button class="fb-fab" id="fbOpen" title="Feedback / Suggest a word">💬 <span>Feedback / Suggest a Word</span></button>
+
+  <div class="fb-overlay" id="fbOverlay">
+    <div class="fb-box">
+      <button class="fb-close" id="fbClose">&times;</button>
+      <h3 id="fbTitle">Help us improve</h3>
+
+      <div class="fb-tabs">
+        <button class="fb-tab active" data-target="fbWord">💡 Suggest a Word</button>
+        <button class="fb-tab" data-target="fbFeed">💬 Feedback</button>
+      </div>
+
+      <!-- Suggest a word -->
+      <form class="fb-form show" id="fbWord" action="https://formspree.io/f/mljjorkk" method="POST">
+        <input type="hidden" name="form_type" value="Word Suggestion">
+        <input type="text" name="_gotcha" class="fb-hp" tabindex="-1" autocomplete="off">
+
+        <label>English word *</label>
+        <input name="english_word" required>
+
+        <label>Language *</label>
+        <select name="language" id="fbLangSelect" required>
+          <option value="">Choose a language</option>
+          <option>Balochi</option>
+          <option>Pashto</option>
+          <option>Punjabi</option>
+        </select>
+
+        <label>Meaning / translation *</label>
+        <input name="translation" required>
+
+        <label>Pronunciation (optional)</label>
+        <input name="pronunciation">
+
+        <label>Your name (optional)</label>
+        <input name="name">
+
+        <button class="fb-send" type="submit">Send Suggestion</button>
+        <div class="fb-msg"></div>
+      </form>
+
+      <!-- Feedback -->
+      <form class="fb-form" id="fbFeed" action="https://formspree.io/f/mljjorkk" method="POST">
+        <input type="hidden" name="form_type" value="Feedback">
+        <input type="hidden" name="page" id="fbPage">
+        <input type="text" name="_gotcha" class="fb-hp" tabindex="-1" autocomplete="off">
+
+        <label>Rating</label>
+        <select name="rating">
+          <option>⭐⭐⭐⭐⭐ Excellent</option>
+          <option>⭐⭐⭐⭐ Good</option>
+          <option>⭐⭐⭐ Okay</option>
+          <option>⭐⭐ Poor</option>
+          <option>⭐ Very poor</option>
+        </select>
+
+        <label>Your feedback *</label>
+        <textarea name="message" required></textarea>
+
+        <label>Your name (optional)</label>
+        <input name="name">
+
+        <button class="fb-send" type="submit">Send Feedback</button>
+        <div class="fb-msg"></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    // This page: Punjabi
+    var FB_LANG = "Punjabi";
+
+    var overlay = document.getElementById('fbOverlay');
+    var langSelect = document.getElementById('fbLangSelect');
+    document.getElementById('fbPage').value = FB_LANG + ' page';
+
+    langSelect.value = FB_LANG;
+    document.getElementById('fbTitle').textContent = FB_LANG + ' Dictionary: Help us improve';
+
+    document.getElementById('fbOpen').onclick = function () { overlay.classList.add('open'); };
+    document.getElementById('fbClose').onclick = function () { overlay.classList.remove('open'); };
+    overlay.onclick = function (e) { if (e.target === overlay) overlay.classList.remove('open'); };
+
+    document.querySelectorAll('.fb-tab').forEach(function (tab) {
+      tab.onclick = function () {
+        document.querySelectorAll('.fb-tab').forEach(function (t) { t.classList.remove('active'); });
+        document.querySelectorAll('.fb-form').forEach(function (f) { f.classList.remove('show'); });
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.target).classList.add('show');
+      };
+    });
+
+    document.querySelectorAll('.fb-form').forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var box = form.querySelector('.fb-msg');
+        box.className = 'fb-msg';
+        fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        }).then(function (res) {
+          if (res.ok) {
+            box.textContent = '✅ Thank you! Your message has been sent.';
+            box.className = 'fb-msg ok';
+            form.reset();
+            langSelect.value = FB_LANG;
+          } else {
+            box.textContent = '❌ Something went wrong. Please try again.';
+            box.className = 'fb-msg err';
+          }
+        }).catch(function () {
+          box.textContent = '❌ No internet connection. Please try again later.';
+          box.className = 'fb-msg err';
+        });
+      });
+    });
+  })();
+  </script>
+  <!-- ===== FEEDBACK BUTTON + POP-UP END ===== -->
+   <script src="reverse-search.js"></script>
+</body>
+</html>

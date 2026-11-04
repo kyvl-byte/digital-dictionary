@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Compare Languages | Digital Dictionary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pathway+Gothic+One&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: #EBEBDF; color: #2A1A10;
+      font-family: Arial, Helvetica, sans-serif; text-align: center;
+      cursor: url("images/cursor.svg"), auto;
+    }
+    h1, h2, h3 {
+      font-family: "Pathway Gothic One", "Arial Narrow", Impact, sans-serif;
+      font-variant: small-caps; font-weight: 400; letter-spacing: 0.03em;
+    }
+    .top {
+      background: #E9631A; padding: 50px 20px 40px; color: #EBEBDF;
+    }
+    .top h1 { margin: 0; font-size: 60px; line-height: 1.05; }
+    .top p { font-size: 18px; margin: 10px 0 0; }
+    .back {
+      display: inline-block; margin-bottom: 16px; color: #EBEBDF;
+      text-decoration: none; font-size: 15px;
+    }
+    .back:hover { text-decoration: underline; }
+
+    .search-wrap { max-width: 520px; margin: -26px auto 0; padding: 0 16px; }
+    .search-wrap input {
+      width: 100%; padding: 16px 20px; font-size: 18px; border-radius: 40px;
+      border: 2px solid #E9631A; background: #fff; color: #2A1A10;
+      box-shadow: 2px 4px 12px rgba(42,26,16,.18);
+    }
+    .search-wrap input:focus { outline: 3px solid #A63F0B; }
+
+    .chips { max-width: 700px; margin: 22px auto 0; padding: 0 16px; }
+    .chips span { font-size: 14px; display: block; margin-bottom: 8px; }
+    .chip {
+      display: inline-block; margin: 4px; padding: 8px 18px; border: none;
+      border-radius: 20px; background: #F6C9A8; color: #2A1A10;
+      cursor: pointer; font-size: 15px; font-family: Arial, sans-serif;
+    }
+    .chip:hover { background: #A63F0B; color: #EBEBDF; }
+
+    .result { max-width: 1000px; margin: 30px auto 60px; padding: 0 16px; }
+    .result h2 { color: #A63F0B; font-size: 48px; margin: 0 0 20px; }
+    .cards { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; }
+    .lang-card {
+      background: #fff; border-radius: 16px; padding: 26px 22px;
+      width: 290px; border-top: 8px solid #E9631A;
+      box-shadow: 2px 4px 12px rgba(42,26,16,.14);
+    }
+    .lang-card h3 { color: #A63F0B; font-size: 30px; margin: 0 0 10px; }
+    .script {
+      font-family: "Noto Naskh Arabic", "Segoe UI", serif; direction: rtl;
+      font-size: 44px; color: #A63F0B; line-height: 1.6; margin: 6px 0;
+      overflow-wrap: anywhere;
+    }
+    .script.long { font-size: 30px; }
+    .pron { font-size: 16px; margin: 0 0 14px; }
+    .missing { color: #8a6a55; font-size: 15px; margin: 22px 0; }
+    .go {
+      display: inline-block; background: #E9631A; color: #EBEBDF;
+      padding: 8px 22px; border-radius: 22px; text-decoration: none;
+      font-family: "Pathway Gothic One", "Arial Narrow", sans-serif; font-size: 22px;
+    }
+    .go:hover { background: #A63F0B; }
+    .empty { color: #8a6a55; font-size: 16px; }
+    @media (max-width: 600px) {
+      .top h1 { font-size: 42px; }
+      .result h2 { font-size: 38px; }
+      .lang-card { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top">
+    <a class="back" href="index.html">← Back to Dictionary</a>
+    <h1>Compare Languages</h1>
+    <p>One word, three languages, side by side.</p>
+  </div>
+
+  <div class="search-wrap">
+    <input id="searchBox" list="wordList" aria-label="English word to compare" placeholder="Type an English word..." autocomplete="off">
+    <datalist id="wordList"></datalist>
+  </div>
+
+  <div class="chips">
+    <span>Or pick a word:</span>
+    <div id="chipRow"></div>
+  </div>
+
+  <div class="result" id="result">
+    <p class="empty">Search or pick a word to compare it.</p>
+  </div>
+
+  <!-- The word lists live in the data folder. Add words there, not here. -->
+  <script src="data/balochi.js" charset="utf-8"></script>
+  <script src="data/pashto.js" charset="utf-8"></script>
+  <script src="data/punjabi.js" charset="utf-8"></script>
+
+  <script>
+    // code = the language tag used for the script text (helps screen readers and fonts)
+    var LANGS = [
+      { key: "balochi", code: "bal",     name: "Balochi", page: "balochi.html", match: "baloch" },
+      { key: "pashto",  code: "ps",      name: "Pashto",  page: "pashto.html",  match: "pash" },
+      { key: "punjabi", code: "pa-Arab", name: "Punjabi", page: "punjabi.html", match: "punj" }
+    ];
+
+    // The same English word is spelled slightly differently in some files.
+    // Left side = the spelling in the file, right side = the spelling used here.
+    var ALIASES = { "neighbour": "neighbor" };
+
+    // Find each language's word list automatically (window.DICT_BALOCHI, DICT_PASHTO, DICT_PUNJABI)
+    function findList(match) {
+      var names = Object.keys(window).filter(function (k) {
+        return k.indexOf("DICT_") === 0 && k.toLowerCase().indexOf(match) !== -1;
+      });
+      return names.length ? window[names[0]] : [];
+    }
+
+    // WORDS["water"] = { balochi: {...}, pashto: {...}, punjabi: {...} }
+    var WORDS = {};
+    var loaded = {};
+    LANGS.forEach(function (L) {
+      var entries = findList(L.match);
+      loaded[L.key] = entries.length;
+      entries.forEach(function (e) {
+        var w = String(e.word).toLowerCase().trim();
+        w = ALIASES[w] || w;
+        if (!WORDS[w]) WORDS[w] = {};
+        WORDS[w][L.key] = { script: e.script, pron: e.meaning || e.pron || "" };
+      });
+    });
+
+    var box = document.getElementById("searchBox");
+    var list = document.getElementById("wordList");
+    var chipRow = document.getElementById("chipRow");
+    var result = document.getElementById("result");
+
+    var allWords = Object.keys(WORDS).sort();
+
+    // Autocomplete list: every word
+    allWords.forEach(function (w) {
+      var opt = document.createElement("option");
+      opt.value = w;
+      list.appendChild(opt);
+    });
+
+    // Quick-pick buttons: a few words that exist in all three languages
+    var inAll = allWords.filter(function (w) {
+      return WORDS[w].balochi && WORDS[w].pashto && WORDS[w].punjabi;
+    });
+    var pool = inAll.length ? inAll : allWords;
+    pool.slice().sort(function () { return Math.random() - 0.5; }).slice(0, 8).sort().forEach(function (w) {
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      chip.textContent = w;
+      chip.onclick = function () { box.value = w; show(w); };
+      chipRow.appendChild(chip);
+    });
+
+    function esc(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function show(word) {
+      word = word.trim().toLowerCase();
+      word = ALIASES[word] || word;
+      var data = WORDS[word];
+      if (!data) {
+        result.innerHTML = word
+          ? '<p class="empty">Sorry, "' + esc(word) + '" is not in the comparison list yet.</p>'
+          : '<p class="empty">Search or pick a word to compare it.</p>';
+        return;
+      }
+      var html = '<h2>' + esc(word) + '</h2><div class="cards">';
+      LANGS.forEach(function (L) {
+        var d = data[L.key];
+        html += '<div class="lang-card"><h3>' + L.name + '</h3>';
+        if (d) {
+          var long = d.script.length > 14 ? " long" : "";
+          html += '<p class="script' + long + '" lang="' + L.code + '">' + esc(d.script) + '</p>';
+          html += '<p class="pron">' + esc(d.pron) + '</p>';
+        } else {
+          html += '<p class="missing">Not added yet</p>';
+        }
+        html += '<a class="go" href="' + L.page + '">Open ' + L.name + ' →</a></div>';
+      });
+      html += '</div>';
+      result.innerHTML = html;
+    }
+
+    // If a data file did not load, say so instead of staying silently empty
+    var notLoaded = LANGS.filter(function (L) { return !loaded[L.key]; });
+    if (notLoaded.length) {
+      result.innerHTML = '<p class="empty">Could not load the word list for: ' +
+        notLoaded.map(function (L) { return L.name; }).join(", ") +
+        '. Check the file names in the data folder.</p>';
+    }
+
+    box.addEventListener("input", function () { show(box.value); });
+  </script>
+</body>
+</html>
